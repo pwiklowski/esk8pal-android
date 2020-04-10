@@ -37,42 +37,56 @@ class HomeViewModel : AndroidViewModel {
         bleClient.connection.observeForever {
 
             if (it != null) {
-                it.readCharacteristic(UUID.fromString(CHAR_VOLTAGE)).subscribe({ onSuccess ->
-                    voltage.postValue(processData(onSuccess))
+                it.setupNotification(UUID.fromString(CHAR_VOLTAGE)).subscribe({ observable ->
+                    observable.subscribe { data ->
+                        voltage.postValue(processData(data))
+                    }
                 }, {
                     Log.e(TAG, it.message);
                 })
 
-                it.readCharacteristic(UUID.fromString(CHAR_CURRENT)).subscribe({ onSuccess ->
-                    current.postValue(processData(onSuccess))
+                it.setupNotification(UUID.fromString(CHAR_CURRENT)).subscribe({ observable ->
+                    observable.subscribe { data ->
+                        current.postValue(processData(data))
+                    }
                 }, {
                     Log.e(TAG, it.message);
                 })
-                it.readCharacteristic(UUID.fromString(CHAR_USED_ENERGY)).subscribe({ onSuccess ->
-                    usedEnergy.postValue(processData(onSuccess))
+                it.setupNotification(UUID.fromString(CHAR_USED_ENERGY)).subscribe({ observable ->
+                    observable.subscribe { data ->
+                        usedEnergy.postValue(processData(data))
+                    }
                 }, {
                     Log.e(TAG, it.message);
                 })
-                it.readCharacteristic(UUID.fromString(CHAR_TOTAL_ENERGY)).subscribe({ onSuccess ->
-                    totalEnergy.postValue(processData(onSuccess))
-                }, {
-                    Log.e(TAG, it.message);
-                })
-
-                it.readCharacteristic(UUID.fromString(CHAR_LATITUDE)).subscribe({ onSuccess ->
-                    latitude.postValue(processData(onSuccess))
-                }, {
-                    Log.e(TAG, it.message);
-                })
-
-                it.readCharacteristic(UUID.fromString(CHAR_LONGITUDE)).subscribe({ onSuccess ->
-                    longitude.postValue(processData(onSuccess))
+                it.setupNotification(UUID.fromString(CHAR_TOTAL_ENERGY)).subscribe({ observable ->
+                    observable.subscribe { data ->
+                        totalEnergy.postValue(processData(data))
+                    }
                 }, {
                     Log.e(TAG, it.message);
                 })
 
-                it.readCharacteristic(UUID.fromString(CHAR_SPEED)).subscribe({ onSuccess ->
-                    speed.postValue(processData(onSuccess))
+                it.setupNotification(UUID.fromString(CHAR_LATITUDE)).subscribe({ observable ->
+                    observable.subscribe { data ->
+                        latitude.postValue(processData(data))
+                    }
+                }, {
+                    Log.e(TAG, it.message);
+                })
+
+                it.setupNotification(UUID.fromString(CHAR_LONGITUDE)).subscribe({ observable ->
+                    observable.subscribe { data ->
+                        longitude.postValue(processData(data))
+                    }
+                }, {
+                    Log.e(TAG, it.message);
+                })
+
+                it.setupNotification(UUID.fromString(CHAR_SPEED)).subscribe({ observable ->
+                    observable.subscribe { data ->
+                        speed.postValue(processData(data))
+                    }
                 }, {
                     Log.e(TAG, it.message);
                 })
