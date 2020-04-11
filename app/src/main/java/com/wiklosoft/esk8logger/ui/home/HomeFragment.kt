@@ -42,31 +42,45 @@ class HomeFragment : Fragment() {
         })
 
         homeViewModel.voltage.observe(viewLifecycleOwner, Observer {
-            voltage.text = it?.toString() ?: ""
+            voltage.text = it?.let {
+                "%.2f V".format((it))
+            } ?: ""
         })
 
         homeViewModel.current.observe(viewLifecycleOwner, Observer {
-            current.text = it?.toString() ?: ""
+            current.text = it?.let {
+                "%.2f A".format((it))
+            } ?: ""
         })
 
         homeViewModel.usedEnergy.observe(viewLifecycleOwner, Observer {
-            usedEnergy.text = it?.toString() ?: ""
+            usedEnergy.text = it?.let {
+                "%.2f mAh".format((it*1000))
+            } ?: ""
         })
 
         homeViewModel.totalEnergy.observe(viewLifecycleOwner, Observer {
-            totalEnergy.text = it?.toString() ?: ""
+            totalEnergy.text = it?.let {
+                "%.0f mAh".format((it*1000))
+            } ?: ""
         })
 
         homeViewModel.latitude.observe(viewLifecycleOwner, Observer {
-            latitude.text = it?.toString() ?: ""
+            latitude.text = it?.let {
+                "%.6f".format((it))
+            } ?: ""
         })
 
         homeViewModel.longitude.observe(viewLifecycleOwner, Observer {
-            longitude.text = it?.toString() ?: ""
+            longitude.text = it?.let {
+                "%.6f".format((it))
+            } ?: ""
         })
 
         homeViewModel.speed.observe(viewLifecycleOwner, Observer {
-            speed.text = it?.toString() ?: ""
+            speed.text = it?.let {
+                "%.2f km/h".format((it))
+            } ?: ""
         })
         return root
     }
