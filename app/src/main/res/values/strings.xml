@@ -1,6 +1,21 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_rides">Rides</string>
+    <string name="title_settings">Settings</string>
+
+
+    <!-- Preference Titles -->
+    <string name="ride_header">Ride</string>
+    <string name="wifi_header">Wifi settings</string>
+    <string name="storage_header">Storage</string>
+
+    <string name="automatic_ride_status">Start ride automatically</string>
+    <string name="reply_title">Default reply action</string>
+
+    <string name="wifi_enabled">Enable wifi</string>
+    <string name="wifi_pass">Wifi password</string>
+    <string name="wifi_ssid">Wifi SSID</string>
+
+    <string name="storage">Storage</string>
 </resources>

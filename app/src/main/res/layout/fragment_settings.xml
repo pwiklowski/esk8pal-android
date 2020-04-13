@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.settings.SettingsFragment">
+
+    <TextView
+        style="@style/LabelText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Storage" />
+
+    <TextView
+        android:id="@+id/speed"
+        style="@style/ValueText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="12312/123123" />
+
+</LinearLayout>
