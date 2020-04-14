@@ -10,6 +10,8 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.*
 
+private const val CHAR_STATE = "0000fd01-0000-1000-8000-00805f9b34fb"
+
 private const val CHAR_VOLTAGE = "0000ff01-0000-1000-8000-00805f9b34fb"
 private const val CHAR_CURRENT = "0000ff02-0000-1000-8000-00805f9b34fb"
 private const val CHAR_USED_ENERGY = "0000ff03-0000-1000-8000-00805f9b34fb"
@@ -32,6 +34,8 @@ class HomeViewModel : AndroidViewModel {
     var speed = MutableLiveData<Double>()
     var latitude = MutableLiveData<Double>()
     var longitude = MutableLiveData<Double>()
+
+    var state = MutableLiveData<Int>()
 
     constructor(application: Application) : super(application) {
         bleClient.connection.observeForever {
@@ -90,6 +94,15 @@ class HomeViewModel : AndroidViewModel {
                 }, {
                     Log.e(TAG, it.message);
                 })
+
+                it.setupNotification(UUID.fromString(CHAR_STATE)).subscribe({ observable ->
+                    observable.subscribe { data ->
+                        Log.i(TAG, "state update " + data[0].toInt());
+                        state.postValue(data[0].toInt())
+                    }
+                }, {
+                    Log.e(TAG, it.message);
+                })
             } else {
                 voltage.postValue(null);
                 current.postValue(null);
@@ -101,6 +114,15 @@ class HomeViewModel : AndroidViewModel {
                 speed.postValue(null)
             }
         }
+    }
+
+    fun setState(value: Byte) {
+        Log.i(TAG, "setState $value");
+        bleClient.connection.value?.writeCharacteristic(UUID.fromString(CHAR_STATE), ByteArray(1) {value})?.subscribe({
+
+        }, {
+            Log.e(TAG, it.message)
+        })
     }
 
     private fun processData(data: ByteArray) : Double {

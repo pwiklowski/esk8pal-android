@@ -1,6 +1,7 @@
 package com.wiklosoft.esk8logger.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.wiklosoft.esk8logger.R
+
 
 class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
@@ -23,6 +26,10 @@ class HomeFragment : Fragment() {
     private lateinit var longitude: TextView
     private lateinit var speed: TextView
 
+    private lateinit var stateToggle: FloatingActionButton
+
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View? {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
@@ -36,6 +43,12 @@ class HomeFragment : Fragment() {
         latitude = root.findViewById(R.id.latitude)
         longitude = root.findViewById(R.id.longitude)
         speed = root.findViewById(R.id.speed)
+
+        stateToggle = root.findViewById(R.id.state_toggle)
+
+        homeViewModel.state.observe(viewLifecycleOwner, Observer {
+            //TODO update icon
+        })
 
         homeViewModel.connectionState.observe(viewLifecycleOwner, Observer {
             connectionStatus.text = it?.name ?: ""
