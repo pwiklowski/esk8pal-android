@@ -1,12 +1,16 @@
 package com.wiklosoft.esk8logger
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.polidea.rxandroidble2.RxBleConnection
 
 
 class MainActivity() : AppCompatActivity() {
@@ -23,5 +27,14 @@ class MainActivity() : AppCompatActivity() {
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_settings))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        (application as App).bleClient.getDevice().observeConnectionStateChanges().subscribe({
+            Log.d("LoadingFragment", "connection status ${it.toString()}")
+
+            if (it != RxBleConnection.RxBleConnectionState.CONNECTED) {
+                val intent = Intent(this, OnBoardingActivity::class.java)
+                startActivity(intent)
+            }
+        })
     }
 }

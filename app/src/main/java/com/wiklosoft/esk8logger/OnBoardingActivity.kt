@@ -1,7 +1,7 @@
 package com.wiklosoft.esk8logger
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.wiklosoft.esk8logger.ui.loading.LoadingFragment
 
 class OnBoardingActivity : AppCompatActivity() {

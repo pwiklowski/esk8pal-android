@@ -60,7 +60,7 @@ class SettingsFragment : PreferenceFragmentCompat(),
             "wifi_ssid" -> sharedPreferences.getString(
                 key,
                 "esk8pal"
-            )?.let { settingsViewModel.setWifiSsid(it) }
+            )?.let { settingsViewModel.setWifiSSID(it) }
             "wifi_pass" -> sharedPreferences.getString(
                 key,
                 "esk8palpass"
