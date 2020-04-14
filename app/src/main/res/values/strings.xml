@@ -10,7 +10,7 @@
     <string name="wifi_header">Wifi settings</string>
     <string name="storage_header">Storage</string>
 
-    <string name="automatic_ride_status">Start ride automatically</string>
+    <string name="automatic_ride_status">Start ride manually</string>
     <string name="reply_title">Default reply action</string>
 
     <string name="wifi_enabled">Enable wifi</string>
