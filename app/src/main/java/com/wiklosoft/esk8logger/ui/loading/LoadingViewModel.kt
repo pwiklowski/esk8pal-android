@@ -12,7 +12,7 @@ class LoadingViewModel : AndroidViewModel {
     constructor(application: Application) : super(application) {
         val client = getApplication<App>().bleClient
 
-        client.getDevice().observeConnectionStateChanges().subscribe {
+        client.connectionState.subscribe {
             connectionState.postValue(it)
         }
         connectionState.postValue(client.getDevice().connectionState)

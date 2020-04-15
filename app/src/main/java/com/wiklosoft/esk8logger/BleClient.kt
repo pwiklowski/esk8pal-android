@@ -1,13 +1,20 @@
 package com.wiklosoft.esk8logger
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import java.util.*
 
 private const val TAG = "BleClient"
@@ -48,9 +55,23 @@ class BleClient {
     lateinit var connectionSub: Disposable
     private var connection: RxBleConnection? = null
 
+    var connectionState = PublishSubject.create<RxBleConnection.RxBleConnectionState>()
+
+    var voltage = PublishSubject.create<Double>()
+    var current = PublishSubject.create<Double>()
+    val usedEnergy = PublishSubject.create<Double>()
+    var totalEnergy =PublishSubject.create<Double>()
+
+    var speed = PublishSubject.create<Double>()
+    var latitude = PublishSubject.create<Double>()
+    var longitude = PublishSubject.create<Double>()
+
+    var state = PublishSubject.create<Esk8palState>()
+
     constructor(context: Context) {
         bleClient = RxBleClient.create(context)
         getDevice().observeConnectionStateChanges().subscribe {
+            connectionState.onNext(it)
             if (it == RxBleConnection.RxBleConnectionState.DISCONNECTED) {
                 connect()
             }
@@ -65,14 +86,28 @@ class BleClient {
         return "30:AE:A4:4C:D2:52"
     }
 
-    fun connect() {
+    private fun connect() {
         connectionSub = bleClient.getBleDevice(getDeviceMac()).establishConnection(true).subscribe({
             Log.d(TAG, "connected");
             connection = it
+            onConnected()
         }, {
             connection = null
             Log.e(TAG, it.toString());
         })
+    }
+
+    private fun onConnected() {
+        observeVoltage()
+        observeCurrent()
+        observeUsedEnergy()
+        observeTotalEnergy()
+
+        observeLatitude()
+        observeLongitude()
+        observeSpeed()
+
+        observeState()
     }
 
     fun disconnect() {
@@ -118,6 +153,10 @@ class BleClient {
             ByteArray(1) { value })
     }
 
+    private fun processData(data: ByteArray) : Double {
+        return ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).double
+    }
+
     fun getManualRideStart(): Single<ByteArray>? {
         return connection?.readCharacteristic(UUID.fromString(CHAR_MANUAL_RIDE_START))
     }
@@ -134,35 +173,83 @@ class BleClient {
         return connection?.writeCharacteristic(UUID.fromString(CHAR_STATE), ByteArray(1) { value })
     }
 
-    fun observeVoltage(): Observable<Observable<ByteArray>>? {
-        return connection?.setupNotification(UUID.fromString(CHAR_VOLTAGE))
+    private fun observeVoltage() {
+        connection?.setupNotification(UUID.fromString(CHAR_VOLTAGE))?.subscribe({ observable ->
+            observable.subscribe { data ->
+                voltage.onNext(processData(data))
+            }
+        }, {
+            Log.e(TAG, it.message);
+        })
     }
 
-    fun observeCurrent(): Observable<Observable<ByteArray>>? {
-        return connection?.setupNotification(UUID.fromString(CHAR_CURRENT))
+    private fun observeCurrent() {
+        connection?.setupNotification(UUID.fromString(CHAR_CURRENT))?.subscribe({ observable ->
+            observable.subscribe { data ->
+                current.onNext(processData(data))
+            }
+        }, {
+            Log.e(TAG, it.message);
+        })
     }
 
-    fun observeUsedEnergy(): Observable<Observable<ByteArray>>? {
-        return connection?.setupNotification(UUID.fromString(CHAR_USED_ENERGY))
+    private fun observeUsedEnergy() {
+        connection?.setupNotification(UUID.fromString(CHAR_USED_ENERGY))?.subscribe({ observable ->
+            observable.subscribe { data ->
+                usedEnergy.onNext(processData(data))
+            }
+        }, {
+            Log.e(TAG, it.message);
+        })
     }
 
-    fun observeTotalEnergy(): Observable<Observable<ByteArray>>? {
-        return connection?.setupNotification(UUID.fromString(CHAR_TOTAL_ENERGY))
+    private fun observeTotalEnergy() {
+        connection?.setupNotification(UUID.fromString(CHAR_TOTAL_ENERGY))?.subscribe({ observable ->
+            observable.subscribe { data ->
+                totalEnergy.onNext(processData(data))
+            }
+        }, {
+            Log.e(TAG, it.message);
+        })
     }
 
-    fun observeSpeed(): Observable<Observable<ByteArray>>? {
-        return connection?.setupNotification(UUID.fromString(CHAR_SPEED))
+    private fun observeSpeed() {
+        connection?.setupNotification(UUID.fromString(CHAR_SPEED))?.subscribe({ observable ->
+            observable.subscribe { data ->
+                speed.onNext(processData(data))
+            }
+        }, {
+            Log.e(TAG, it.message);
+        })
     }
 
-    fun observeLatitude(): Observable<Observable<ByteArray>>? {
-        return connection?.setupNotification(UUID.fromString(CHAR_LATITUDE))
+    private fun observeLatitude() {
+        connection?.setupNotification(UUID.fromString(CHAR_LATITUDE))?.subscribe({ observable ->
+            observable.subscribe { data ->
+                latitude.onNext(processData(data))
+            }
+        }, {
+            Log.e(TAG, it.message);
+        })
     }
 
-    fun observeLongitude(): Observable<Observable<ByteArray>>? {
-        return connection?.setupNotification(UUID.fromString(CHAR_LONGITUDE))
+    private fun observeLongitude() {
+        connection?.setupNotification(UUID.fromString(CHAR_LONGITUDE))?.subscribe({ observable ->
+            observable.subscribe { data ->
+                longitude.onNext(processData(data))
+            }
+        }, {
+            Log.e(TAG, it.message);
+        })
     }
 
-    fun observeState(): Observable<Observable<ByteArray>>? {
-        return connection?.setupNotification(UUID.fromString(CHAR_STATE))
+    private fun observeState() {
+        connection?.setupNotification(UUID.fromString(CHAR_STATE))?.subscribe({ observable ->
+            observable.subscribe { data ->
+                state.onNext(Esk8palState.of(data[0]))
+            }
+        }, {
+            Log.e(TAG, it.message);
+        })
     }
 }

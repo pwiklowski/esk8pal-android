@@ -8,6 +8,7 @@ import com.polidea.rxandroidble2.RxBleConnection
 import com.wiklosoft.esk8logger.App
 import com.wiklosoft.esk8logger.BleClient
 import com.wiklosoft.esk8logger.Esk8palState
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -29,71 +30,36 @@ class HomeViewModel : AndroidViewModel {
     var state = MutableLiveData<Esk8palState>()
 
     constructor(application: Application) : super(application) {
-        with(bleClient) {
-            observeVoltage()?.subscribe({ observable ->
-                observable.subscribe { data ->
-                    voltage.postValue(processData(data))
-                }
-            }, {
-                Log.e(TAG, it.message);
-            })
+        bleClient.usedEnergy.subscribe {
+            usedEnergy.postValue(it)
+        }
 
-            observeCurrent()?.subscribe({ observable ->
-                observable.subscribe { data ->
-                    current.postValue(processData(data))
-                }
-            }, {
-                Log.e(TAG, it.message);
-            })
+        bleClient.voltage.subscribe {
+            voltage.postValue(it)
+        }
 
-            observeUsedEnergy()?.subscribe({ observable ->
-                observable.subscribe { data ->
-                    usedEnergy.postValue(processData(data))
-                }
-            }, {
-                Log.e(TAG, it.message);
-            })
+        bleClient.current.subscribe {
+            current.postValue(it)
+        }
 
-            observeTotalEnergy()?.subscribe({ observable ->
-                observable.subscribe { data ->
-                    totalEnergy.postValue(processData(data))
-                }
-            }, {
-                Log.e(TAG, it.message);
-            })
+        bleClient.totalEnergy.subscribe {
+            totalEnergy.postValue(it)
+        }
 
-            observeLatitude()?.subscribe({ observable ->
-                observable.subscribe { data ->
-                    latitude.postValue(processData(data))
-                }
-            }, {
-                Log.e(TAG, it.message);
-            })
+        bleClient.latitude.subscribe {
+            latitude.postValue(it)
+        }
 
-            observeLongitude()?.subscribe({ observable ->
-                observable.subscribe { data ->
-                    longitude.postValue(processData(data))
-                }
-            }, {
-                Log.e(TAG, it.message);
-            })
+        bleClient.longitude.subscribe {
+            longitude.postValue(it)
+        }
 
-            observeSpeed()?.subscribe({ observable ->
-                observable.subscribe { data ->
-                    speed.postValue(processData(data))
-                }
-            }, {
-                Log.e(TAG, it.message);
-            })
+        bleClient.speed.subscribe {
+            speed.postValue(it)
+        }
 
-            observeState()?.subscribe({ observable ->
-                observable.subscribe { data ->
-                    Log.i(TAG, "state update " + data[0].toInt());
-                    state.postValue(Esk8palState.of(data[0]))
-                }
-            }, {
-                Log.e(TAG, it.message);
-            })
+        bleClient.state.subscribe {
+            state.postValue(it)
         }
     }
 

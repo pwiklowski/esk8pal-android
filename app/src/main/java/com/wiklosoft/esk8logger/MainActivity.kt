@@ -28,13 +28,13 @@ class MainActivity() : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        (application as App).bleClient.getDevice().observeConnectionStateChanges().subscribe({
-            Log.d("LoadingFragment", "connection status ${it.toString()}")
+        (application as App).bleClient.connectionState.subscribe {
+            Log.d("LoadingFragment", "connection status  ${it.toString()}")
 
             if (it != RxBleConnection.RxBleConnectionState.CONNECTED) {
                 val intent = Intent(this, OnBoardingActivity::class.java)
                 startActivity(intent)
             }
-        })
+        }
     }
 }
