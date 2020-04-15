@@ -33,6 +33,19 @@
             style="@style/LabelText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="State" />
+
+        <TextView
+            android:id="@+id/state"
+            style="@style/ValueText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Riding" />
+
+        <TextView
+            style="@style/LabelText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="Connection status" />
 
         <TextView

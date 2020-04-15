@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.polidea.rxandroidble2.RxBleConnection
 import com.wiklosoft.esk8logger.App
 import com.wiklosoft.esk8logger.BleClient
+import com.wiklosoft.esk8logger.Esk8palState
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -25,7 +26,7 @@ class HomeViewModel : AndroidViewModel {
     var latitude = MutableLiveData<Double>()
     var longitude = MutableLiveData<Double>()
 
-    var state = MutableLiveData<Int>()
+    var state = MutableLiveData<Esk8palState>()
 
     constructor(application: Application) : super(application) {
         with(bleClient) {
@@ -88,7 +89,7 @@ class HomeViewModel : AndroidViewModel {
             observeState()?.subscribe({ observable ->
                 observable.subscribe { data ->
                     Log.i(TAG, "state update " + data[0].toInt());
-                    state.postValue(data[0].toInt())
+                    state.postValue(Esk8palState.of(data[0]))
                 }
             }, {
                 Log.e(TAG, it.message);
@@ -96,9 +97,9 @@ class HomeViewModel : AndroidViewModel {
         }
     }
 
-    fun setState(value: Byte) {
+    fun setState(value: Esk8palState) {
         Log.i(TAG, "setState $value");
-        bleClient.setState(value)?.subscribe({
+        bleClient.setState(value.value)?.subscribe({
 
         }, {
             Log.e(TAG, it.message)

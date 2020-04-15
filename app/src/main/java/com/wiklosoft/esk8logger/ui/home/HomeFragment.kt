@@ -27,7 +27,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var stateToggle: FloatingActionButton
 
-
+    private lateinit var state: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View? {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
@@ -45,9 +45,10 @@ class HomeFragment : Fragment() {
         speed = root.findViewById(R.id.speed)
 
         stateToggle = root.findViewById(R.id.state_toggle)
+        state = root.findViewById(R.id.state)
 
         homeViewModel.state.observe(viewLifecycleOwner, Observer {
-            //TODO update icon
+            state.text = it.toString()
         })
 
         homeViewModel.connectionState.observe(viewLifecycleOwner, Observer {

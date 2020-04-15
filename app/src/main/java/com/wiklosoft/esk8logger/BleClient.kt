@@ -32,6 +32,16 @@ private const val CHAR_WIFI_ENABLED = "0000fd05-0000-1000-8000-00805f9b34fb"
 private const val CHAR_FREE_STORAGE = "0000fd06-0000-1000-8000-00805f9b34fb"
 private const val CHAR_TOTAL_STORAGE = "0000fd07-0000-1000-8000-00805f9b34fb"
 
+enum class Esk8palState(val value: Byte){
+    PARKED(0),
+    RIDING(1);
+
+    companion object {
+        fun of(value: Byte) = values().find { it.value == value}
+            ?: throw IllegalAccessException("")
+    }
+};
+
 
 class BleClient {
     private var bleClient: RxBleClient
