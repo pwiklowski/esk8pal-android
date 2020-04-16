@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.wiklosoft.esk8logger.Esk8palState
 import com.wiklosoft.esk8logger.R
 
 
@@ -29,6 +30,8 @@ class HomeFragment : Fragment() {
 
     private lateinit var state: TextView
 
+    private lateinit var stateValue: Esk8palState
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View? {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
@@ -47,8 +50,23 @@ class HomeFragment : Fragment() {
         stateToggle = root.findViewById(R.id.state_toggle)
         state = root.findViewById(R.id.state)
 
+        stateToggle.setOnClickListener {
+
+            if (stateValue == Esk8palState.RIDING) {
+                homeViewModel.setState(Esk8palState.PARKED)
+            } else {
+                homeViewModel.setState(Esk8palState.RIDING)
+            }
+        }
+
         homeViewModel.state.observe(viewLifecycleOwner, Observer {
+            stateValue = it
             state.text = it.toString()
+            if (stateValue == Esk8palState.RIDING) {
+                stateToggle.setImageResource(R.drawable.ic_stop)
+            } else {
+                stateToggle.setImageResource(R.drawable.ic_play_button)
+            }
         })
 
         homeViewModel.connectionState.observe(viewLifecycleOwner, Observer {
