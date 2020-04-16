@@ -244,6 +244,12 @@ class BleClient {
     }
 
     private fun observeState() {
+        connection?.readCharacteristic(UUID.fromString(CHAR_STATE))?.subscribe( {
+            state.onNext(Esk8palState.of(it[0]))
+        }, {
+            Log.e(TAG, it.message);
+        })
+
         connection?.setupNotification(UUID.fromString(CHAR_STATE))?.subscribe({ observable ->
             observable.subscribe { data ->
                 state.onNext(Esk8palState.of(data[0]))
