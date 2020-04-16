@@ -55,18 +55,18 @@ class BleClient {
     lateinit var connectionSub: Disposable
     private var connection: RxBleConnection? = null
 
-    var connectionState = PublishSubject.create<RxBleConnection.RxBleConnectionState>()
+    var connectionState = BehaviorSubject.create<RxBleConnection.RxBleConnectionState>()
 
-    var voltage = PublishSubject.create<Double>()
-    var current = PublishSubject.create<Double>()
-    val usedEnergy = PublishSubject.create<Double>()
-    var totalEnergy =PublishSubject.create<Double>()
+    var voltage = BehaviorSubject.create<Double>()
+    var current = BehaviorSubject.create<Double>()
+    val usedEnergy = BehaviorSubject.create<Double>()
+    var totalEnergy = BehaviorSubject.create<Double>()
 
-    var speed = PublishSubject.create<Double>()
-    var latitude = PublishSubject.create<Double>()
-    var longitude = PublishSubject.create<Double>()
+    var speed = BehaviorSubject.create<Double>()
+    var latitude = BehaviorSubject.create<Double>()
+    var longitude = BehaviorSubject.create<Double>()
 
-    var state = PublishSubject.create<Esk8palState>()
+    var state = BehaviorSubject.create<Esk8palState>()
 
     constructor(context: Context) {
         bleClient = RxBleClient.create(context)
