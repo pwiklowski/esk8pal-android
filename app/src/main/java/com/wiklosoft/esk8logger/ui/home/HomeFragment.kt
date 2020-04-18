@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.wiklosoft.esk8logger.Esk8palState
 import com.wiklosoft.esk8logger.R
+import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class HomeFragment : Fragment() {
@@ -112,6 +113,12 @@ class HomeFragment : Fragment() {
         homeViewModel.speed.observe(viewLifecycleOwner, Observer {
             speed.text = it?.let {
                 "%.2f km/h".format((it))
+            } ?: ""
+        })
+
+        homeViewModel.tripDistance.observe(viewLifecycleOwner, Observer {
+            trip_distance.text = it?.let {
+                "%.2f km".format((it))
             } ?: ""
         })
         return root

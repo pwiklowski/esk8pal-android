@@ -24,6 +24,7 @@ class HomeViewModel : AndroidViewModel {
     var totalEnergy = MutableLiveData<Double>()
 
     var speed = MutableLiveData<Double>()
+    var tripDistance = MutableLiveData<Double>()
     var latitude = MutableLiveData<Double>()
     var longitude = MutableLiveData<Double>()
 
@@ -56,6 +57,10 @@ class HomeViewModel : AndroidViewModel {
 
         bleClient.speed.subscribe {
             speed.postValue(it)
+        }
+
+        bleClient.tripDistance.subscribe {
+            tripDistance.postValue(it)
         }
 
         bleClient.state.subscribe {

@@ -147,6 +147,19 @@
             android:layout_height="wrap_content"
             android:text="20 km/h" />
 
+        <TextView
+            style="@style/LabelText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trip distance" />
+
+        <TextView
+            android:id="@+id/trip_distance"
+            style="@style/ValueText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="12 km" />
+
 
     </LinearLayout>
 

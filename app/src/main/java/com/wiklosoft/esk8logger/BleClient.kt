@@ -29,6 +29,7 @@ private const val CHAR_TOTAL_ENERGY = "0000ff04-0000-1000-8000-00805f9b34fb"
 private const val CHAR_LATITUDE = "0000fe01-0000-1000-8000-00805f9b34fb"
 private const val CHAR_LONGITUDE = "0000fe02-0000-1000-8000-00805f9b34fb"
 private const val CHAR_SPEED = "0000fe03-0000-1000-8000-00805f9b34fb"
+private const val CHAR_TRIP_DISTANCE = "0000fe04-0000-1000-8000-00805f9b34fb"
 
 
 private const val CHAR_MANUAL_RIDE_START = "0000fd02-0000-1000-8000-00805f9b34fb"
@@ -63,6 +64,8 @@ class BleClient {
     var totalEnergy = BehaviorSubject.create<Double>()
 
     var speed = BehaviorSubject.create<Double>()
+    var tripDistance = BehaviorSubject.create<Double>()
+
     var latitude = BehaviorSubject.create<Double>()
     var longitude = BehaviorSubject.create<Double>()
 
@@ -106,6 +109,8 @@ class BleClient {
         observeLatitude()
         observeLongitude()
         observeSpeed()
+
+        observeTripDistance()
 
         observeState()
     }
@@ -217,6 +222,16 @@ class BleClient {
         connection?.setupNotification(UUID.fromString(CHAR_SPEED))?.subscribe({ observable ->
             observable.subscribe { data ->
                 speed.onNext(processData(data))
+            }
+        }, {
+            Log.e(TAG, it.message);
+        })
+    }
+
+    private fun observeTripDistance() {
+        connection?.setupNotification(UUID.fromString(CHAR_TRIP_DISTANCE))?.subscribe({ observable ->
+            observable.subscribe { data ->
+                tripDistance.onNext(processData(data))
             }
         }, {
             Log.e(TAG, it.message);
