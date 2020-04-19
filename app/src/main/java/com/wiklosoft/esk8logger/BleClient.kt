@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.polidea.rxandroidble2.NotificationSetupMode
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
@@ -179,7 +180,7 @@ class BleClient {
     }
 
     private fun observeVoltage() {
-        connection?.setupNotification(UUID.fromString(CHAR_VOLTAGE))?.subscribe({ observable ->
+        connection?.setupNotification(UUID.fromString(CHAR_VOLTAGE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
             observable.subscribe { data ->
                 voltage.onNext(processData(data))
             }
@@ -189,7 +190,7 @@ class BleClient {
     }
 
     private fun observeCurrent() {
-        connection?.setupNotification(UUID.fromString(CHAR_CURRENT))?.subscribe({ observable ->
+        connection?.setupNotification(UUID.fromString(CHAR_CURRENT), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
             observable.subscribe { data ->
                 current.onNext(processData(data))
             }
@@ -199,7 +200,7 @@ class BleClient {
     }
 
     private fun observeUsedEnergy() {
-        connection?.setupNotification(UUID.fromString(CHAR_USED_ENERGY))?.subscribe({ observable ->
+        connection?.setupNotification(UUID.fromString(CHAR_USED_ENERGY), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
             observable.subscribe { data ->
                 usedEnergy.onNext(processData(data))
             }
@@ -209,7 +210,7 @@ class BleClient {
     }
 
     private fun observeTotalEnergy() {
-        connection?.setupNotification(UUID.fromString(CHAR_TOTAL_ENERGY))?.subscribe({ observable ->
+        connection?.setupNotification(UUID.fromString(CHAR_TOTAL_ENERGY), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
             observable.subscribe { data ->
                 totalEnergy.onNext(processData(data))
             }
@@ -219,7 +220,7 @@ class BleClient {
     }
 
     private fun observeSpeed() {
-        connection?.setupNotification(UUID.fromString(CHAR_SPEED))?.subscribe({ observable ->
+        connection?.setupNotification(UUID.fromString(CHAR_SPEED), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
             observable.subscribe { data ->
                 speed.onNext(processData(data))
             }
@@ -229,7 +230,7 @@ class BleClient {
     }
 
     private fun observeTripDistance() {
-        connection?.setupNotification(UUID.fromString(CHAR_TRIP_DISTANCE))?.subscribe({ observable ->
+        connection?.setupNotification(UUID.fromString(CHAR_TRIP_DISTANCE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
             observable.subscribe { data ->
                 tripDistance.onNext(processData(data))
             }
@@ -239,7 +240,7 @@ class BleClient {
     }
 
     private fun observeLatitude() {
-        connection?.setupNotification(UUID.fromString(CHAR_LATITUDE))?.subscribe({ observable ->
+        connection?.setupNotification(UUID.fromString(CHAR_LATITUDE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
             observable.subscribe { data ->
                 latitude.onNext(processData(data))
             }
@@ -249,7 +250,7 @@ class BleClient {
     }
 
     private fun observeLongitude() {
-        connection?.setupNotification(UUID.fromString(CHAR_LONGITUDE))?.subscribe({ observable ->
+        connection?.setupNotification(UUID.fromString(CHAR_LONGITUDE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
             observable.subscribe { data ->
                 longitude.onNext(processData(data))
             }
@@ -259,13 +260,7 @@ class BleClient {
     }
 
     private fun observeState() {
-        connection?.readCharacteristic(UUID.fromString(CHAR_STATE))?.subscribe( {
-            state.onNext(Esk8palState.of(it[0]))
-        }, {
-            Log.e(TAG, it.message);
-        })
-
-        connection?.setupNotification(UUID.fromString(CHAR_STATE))?.subscribe({ observable ->
+        connection?.setupNotification(UUID.fromString(CHAR_STATE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
             observable.subscribe { data ->
                 state.onNext(Esk8palState.of(data[0]))
             }
