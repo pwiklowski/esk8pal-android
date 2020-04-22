@@ -7,11 +7,103 @@
     tools:context=".ui.home.HomeFragment">
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            style="@style/LabelText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Latitude" />
+
+        <TextView
+            android:id="@+id/latitude"
+            style="@style/ValueText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="50.12345" />
+
+        <TextView
+            style="@style/LabelText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Longitude" />
+
+        <TextView
+            android:id="@+id/longitude"
+            style="@style/ValueText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="20.34514" />
+
+        <TextView
+            style="@style/LabelText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Speed" />
+
+        <TextView
+            android:id="@+id/speed"
+            style="@style/ValueText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="20 km/h" />
+
+        <TextView
+            style="@style/LabelText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trip distance" />
+
+        <TextView
+            android:id="@+id/trip_distance"
+            style="@style/ValueText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="12 km" />
+
+
+        <TextView
+            style="@style/LabelText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="GPS Fix Status" />
+
+        <TextView
+            android:id="@+id/gps_fix_status"
+            style="@style/ValueText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0" />
+
+        <TextView
+            style="@style/LabelText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="GPS Satellite count" />
+
+        <TextView
+            android:id="@+id/gps_satellite_count"
+            style="@style/ValueText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
         android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -94,58 +186,6 @@
             android:layout_height="wrap_content"
             android:text="9000 mAh" />
 
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Latitude" />
-
-        <TextView
-            android:id="@+id/latitude"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="50.12345" />
-
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Longitude" />
-
-        <TextView
-            android:id="@+id/longitude"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="20.34514" />
-
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Speed" />
-
-        <TextView
-            android:id="@+id/speed"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="20 km/h" />
-
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Trip distance" />
-
-        <TextView
-            android:id="@+id/trip_distance"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="12 km" />
-
 
     </LinearLayout>
 
@@ -160,5 +200,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="232dp"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="160dp"
+        tools:layout_editor_absoluteY="162dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

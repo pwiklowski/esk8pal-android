@@ -30,6 +30,9 @@ class HomeViewModel : AndroidViewModel {
 
     var state = MutableLiveData<Esk8palState>()
 
+    var gpsSatelliteCount = MutableLiveData<Int>()
+    var gpsFixStatus = MutableLiveData<Int>()
+
     constructor(application: Application) : super(application) {
         bleClient.usedEnergy.subscribe {
             usedEnergy.postValue(it)
@@ -65,6 +68,14 @@ class HomeViewModel : AndroidViewModel {
 
         bleClient.state.subscribe {
             state.postValue(it)
+        }
+
+        bleClient.gpsFixStatus.subscribe {
+            gpsFixStatus.postValue(it.toInt())
+        }
+
+        bleClient.gpsSatelliteCount.subscribe {
+            gpsSatelliteCount.postValue(it.toInt())
         }
     }
 

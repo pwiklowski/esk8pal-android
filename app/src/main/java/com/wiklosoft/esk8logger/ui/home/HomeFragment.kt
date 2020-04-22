@@ -121,6 +121,17 @@ class HomeFragment : Fragment() {
                 "%.2f km".format((it))
             } ?: ""
         })
+
+        homeViewModel.gpsSatelliteCount.observe(viewLifecycleOwner, Observer {
+            gps_satellite_count.text = it?.let {
+                "%d".format((it))
+            } ?: ""
+        })
+        homeViewModel.gpsFixStatus.observe(viewLifecycleOwner, Observer {
+            gps_fix_status.text = it?.let {
+                "%d".format((it))
+            } ?: ""
+        })
         return root
     }
 }

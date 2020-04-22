@@ -10,16 +10,16 @@
     </style>
 
     <style name="LabelText" parent="android:Widget.TextView">
-        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginTop">8dp</item>
         <item name="android:textAlignment">textStart</item>
         <item name="android:fontFamily">sans-serif-light"</item>
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">12dp</item>
     </style>
     <style name="ValueText" parent="android:Widget.TextView">
-        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
         <item name="android:fontFamily">sans-serif"</item>
         <item name="android:textAlignment">textStart</item>
-        <item name="android:textSize">26dp</item>
+        <item name="android:textSize">22dp</item>
     </style>
 
 </resources>

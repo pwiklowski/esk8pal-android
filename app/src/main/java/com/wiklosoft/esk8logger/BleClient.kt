@@ -32,6 +32,8 @@ private const val CHAR_LONGITUDE = "0000fe02-0000-1000-8000-00805f9b34fb"
 private const val CHAR_SPEED = "0000fe03-0000-1000-8000-00805f9b34fb"
 private const val CHAR_TRIP_DISTANCE = "0000fe04-0000-1000-8000-00805f9b34fb"
 
+private const val CHAR_GPS_FIX = "0000fe05-0000-1000-8000-00805f9b34fb"
+private const val CHAR_GPS_SATELLITE_COUNT = "0000fe06-0000-1000-8000-00805f9b34fb"
 
 private const val CHAR_MANUAL_RIDE_START = "0000fd02-0000-1000-8000-00805f9b34fb"
 private const val CHAR_WIFI_SSID = "0000fd03-0000-1000-8000-00805f9b34fb"
@@ -71,6 +73,9 @@ class BleClient {
     var longitude = BehaviorSubject.create<Double>()
 
     var state = BehaviorSubject.create<Esk8palState>()
+
+    var gpsFixStatus = BehaviorSubject.create<Byte>()
+    var gpsSatelliteCount = BehaviorSubject.create<Byte>()
 
     constructor(context: Context) {
         bleClient = RxBleClient.create(context)
@@ -114,6 +119,7 @@ class BleClient {
         observeTripDistance()
 
         observeState()
+        observeGPSState()
     }
 
     fun disconnect() {
@@ -263,6 +269,24 @@ class BleClient {
         connection?.setupNotification(UUID.fromString(CHAR_STATE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
             observable.subscribe { data ->
                 state.onNext(Esk8palState.of(data[0]))
+            }
+        }, {
+            Log.e(TAG, it.message);
+        })
+    }
+
+    private fun observeGPSState() {
+        connection?.setupNotification(UUID.fromString(CHAR_GPS_FIX), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
+            observable.subscribe { data ->
+                gpsFixStatus.onNext(data[0])
+            }
+        }, {
+            Log.e(TAG, it.message);
+        })
+
+        connection?.setupNotification(UUID.fromString(CHAR_GPS_SATELLITE_COUNT), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
+            observable.subscribe { data ->
+                gpsSatelliteCount.onNext(data[0])
             }
         }, {
             Log.e(TAG, it.message);
