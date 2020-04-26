@@ -1,21 +1,17 @@
 package com.wiklosoft.esk8logger
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.polidea.rxandroidble2.NotificationSetupMode
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.time.LocalDateTime
 import java.util.*
 
 private const val TAG = "BleClient"
@@ -42,6 +38,8 @@ private const val CHAR_WIFI_ENABLED = "0000fd05-0000-1000-8000-00805f9b34fb"
 
 private const val CHAR_FREE_STORAGE = "0000fd06-0000-1000-8000-00805f9b34fb"
 private const val CHAR_TOTAL_STORAGE = "0000fd07-0000-1000-8000-00805f9b34fb"
+
+private const val CHAR_TIME = "0000fd08-0000-1000-8000-00805f9b34fb"
 
 enum class Esk8palState(val value: Byte){
     PARKED(0),
@@ -120,6 +118,27 @@ class BleClient {
 
         observeState()
         observeGPSState()
+
+        setTime()
+    }
+
+    fun setTime() {
+        val cal = Calendar.getInstance()
+
+        val data = ByteArray(6)
+        data[0] = (cal.get(Calendar.YEAR) - 2000).toByte()
+        data[1] = cal.get(Calendar.MONTH).toByte()
+        data[2] = cal.get(Calendar.DAY_OF_MONTH).toByte()
+
+        data[3] = cal.get(Calendar.HOUR_OF_DAY).toByte()
+        data[4] = cal.get(Calendar.MINUTE).toByte()
+        data[5] = cal.get(Calendar.SECOND).toByte()
+
+        connection?.writeCharacteristic(UUID.fromString(CHAR_TIME), data)?.subscribe({
+
+        }, {
+
+        })
     }
 
     fun disconnect() {
