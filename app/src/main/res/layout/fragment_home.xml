@@ -95,6 +95,19 @@
             android:layout_height="wrap_content"
             android:text="0" />
 
+        <TextView
+            style="@style/LabelText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Altitude" />
+
+        <TextView
+            android:id="@+id/altitude"
+            style="@style/ValueText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0" />
+
 
     </LinearLayout>
 
@@ -185,6 +198,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="9000 mAh" />
+
+        <TextView
+            style="@style/LabelText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trip time" />
+
+        <TextView
+            android:id="@+id/ride_time"
+            style="@style/ValueText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="9000 mAh" />
+
 
 
     </LinearLayout>

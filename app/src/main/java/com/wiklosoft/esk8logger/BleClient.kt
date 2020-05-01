@@ -11,7 +11,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
-import java.time.LocalDateTime
 import java.util.*
 
 private const val TAG = "BleClient"
@@ -22,6 +21,9 @@ private const val CHAR_VOLTAGE = "0000ff01-0000-1000-8000-00805f9b34fb"
 private const val CHAR_CURRENT = "0000ff02-0000-1000-8000-00805f9b34fb"
 private const val CHAR_USED_ENERGY = "0000ff03-0000-1000-8000-00805f9b34fb"
 private const val CHAR_TOTAL_ENERGY = "0000ff04-0000-1000-8000-00805f9b34fb"
+
+
+private const val CHAR_APP_STATE = "0000ffff-0000-1000-8000-00805f9b34fb"
 
 private const val CHAR_LATITUDE = "0000fe01-0000-1000-8000-00805f9b34fb"
 private const val CHAR_LONGITUDE = "0000fe02-0000-1000-8000-00805f9b34fb"
@@ -66,6 +68,7 @@ class BleClient {
 
     var speed = BehaviorSubject.create<Double>()
     var tripDistance = BehaviorSubject.create<Double>()
+    var altitude = BehaviorSubject.create<Double>()
 
     var latitude = BehaviorSubject.create<Double>()
     var longitude = BehaviorSubject.create<Double>()
@@ -74,6 +77,8 @@ class BleClient {
 
     var gpsFixStatus = BehaviorSubject.create<Byte>()
     var gpsSatelliteCount = BehaviorSubject.create<Byte>()
+
+    var ridingTime = BehaviorSubject.create<Int>()
 
     constructor(context: Context) {
         bleClient = RxBleClient.create(context)
@@ -97,6 +102,7 @@ class BleClient {
         connectionSub = bleClient.getBleDevice(getDeviceMac()).establishConnection(true).subscribe({
             Log.d(TAG, "connected");
             connection = it
+            connection?.requestMtu(500)?.subscribe()
             onConnected()
         }, {
             connection = null
@@ -105,24 +111,11 @@ class BleClient {
     }
 
     private fun onConnected() {
-        observeVoltage()
-        observeCurrent()
-        observeUsedEnergy()
-        observeTotalEnergy()
-
-        observeLatitude()
-        observeLongitude()
-        observeSpeed()
-
-        observeTripDistance()
-
-        observeState()
-        observeGPSState()
-
+        observeAppState()
         setTime()
     }
 
-    fun setTime() {
+    private fun setTime() {
         val cal = Calendar.getInstance()
 
         val data = ByteArray(6)
@@ -204,108 +197,34 @@ class BleClient {
         return connection?.writeCharacteristic(UUID.fromString(CHAR_STATE), ByteArray(1) { value })
     }
 
-    private fun observeVoltage() {
-        connection?.setupNotification(UUID.fromString(CHAR_VOLTAGE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
+    private fun observeAppState() {
+        connection?.setupNotification(UUID.fromString(CHAR_APP_STATE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
             observable.subscribe { data ->
-                voltage.onNext(processData(data))
-            }
-        }, {
-            Log.e(TAG, it.message);
-        })
-    }
+                Log.d(TAG, "size" + data.size);
 
-    private fun observeCurrent() {
-        connection?.setupNotification(UUID.fromString(CHAR_CURRENT), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
-            observable.subscribe { data ->
-                current.onNext(processData(data))
-            }
-        }, {
-            Log.e(TAG, it.message);
-        })
-    }
+                current.onNext(processData(data.copyOfRange(0, 8)))
+                voltage.onNext(processData(data.copyOfRange(8, 16)))
+                usedEnergy.onNext(processData(data.copyOfRange(16, 24)))
+                totalEnergy.onNext(processData(data.copyOfRange(24, 32)))
 
-    private fun observeUsedEnergy() {
-        connection?.setupNotification(UUID.fromString(CHAR_USED_ENERGY), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
-            observable.subscribe { data ->
-                usedEnergy.onNext(processData(data))
-            }
-        }, {
-            Log.e(TAG, it.message);
-        })
-    }
+                speed.onNext(processData(data.copyOfRange(32, 40)))
+                latitude.onNext(processData(data.copyOfRange(40, 48)))
+                longitude.onNext(processData(data.copyOfRange(48, 56)))
 
-    private fun observeTotalEnergy() {
-        connection?.setupNotification(UUID.fromString(CHAR_TOTAL_ENERGY), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
-            observable.subscribe { data ->
-                totalEnergy.onNext(processData(data))
-            }
-        }, {
-            Log.e(TAG, it.message);
-        })
-    }
+                tripDistance.onNext(processData(data.copyOfRange(56, 64)))
 
-    private fun observeSpeed() {
-        connection?.setupNotification(UUID.fromString(CHAR_SPEED), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
-            observable.subscribe { data ->
-                speed.onNext(processData(data))
-            }
-        }, {
-            Log.e(TAG, it.message);
-        })
-    }
+                altitude.onNext(processData(data.copyOfRange(64, 72)))
 
-    private fun observeTripDistance() {
-        connection?.setupNotification(UUID.fromString(CHAR_TRIP_DISTANCE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
-            observable.subscribe { data ->
-                tripDistance.onNext(processData(data))
-            }
-        }, {
-            Log.e(TAG, it.message);
-        })
-    }
+                ridingTime.onNext(ByteBuffer.wrap(data.copyOfRange(72, 76)).order(ByteOrder.LITTLE_ENDIAN).int)
 
-    private fun observeLatitude() {
-        connection?.setupNotification(UUID.fromString(CHAR_LATITUDE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
-            observable.subscribe { data ->
-                latitude.onNext(processData(data))
-            }
-        }, {
-            Log.e(TAG, it.message);
-        })
-    }
+                gpsFixStatus.onNext(data[76])
+                gpsSatelliteCount.onNext(data[77])
 
-    private fun observeLongitude() {
-        connection?.setupNotification(UUID.fromString(CHAR_LONGITUDE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
-            observable.subscribe { data ->
-                longitude.onNext(processData(data))
-            }
-        }, {
-            Log.e(TAG, it.message);
-        })
-    }
+                state.onNext(Esk8palState.of(data[78]))
 
-    private fun observeState() {
-        connection?.setupNotification(UUID.fromString(CHAR_STATE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
-            observable.subscribe { data ->
-                state.onNext(Esk8palState.of(data[0]))
-            }
-        }, {
-            Log.e(TAG, it.message);
-        })
-    }
+                //freeStorage: uint32_t
+                //totalStorage: uint32_t
 
-    private fun observeGPSState() {
-        connection?.setupNotification(UUID.fromString(CHAR_GPS_FIX), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
-            observable.subscribe { data ->
-                gpsFixStatus.onNext(data[0])
-            }
-        }, {
-            Log.e(TAG, it.message);
-        })
-
-        connection?.setupNotification(UUID.fromString(CHAR_GPS_SATELLITE_COUNT), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
-            observable.subscribe { data ->
-                gpsSatelliteCount.onNext(data[0])
             }
         }, {
             Log.e(TAG, it.message);

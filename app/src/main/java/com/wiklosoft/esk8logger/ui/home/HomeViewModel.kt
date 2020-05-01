@@ -27,11 +27,14 @@ class HomeViewModel : AndroidViewModel {
     var tripDistance = MutableLiveData<Double>()
     var latitude = MutableLiveData<Double>()
     var longitude = MutableLiveData<Double>()
+    var altitude = MutableLiveData<Double>()
 
     var state = MutableLiveData<Esk8palState>()
 
     var gpsSatelliteCount = MutableLiveData<Int>()
     var gpsFixStatus = MutableLiveData<Int>()
+
+    var ridingTime = MutableLiveData<Int>()
 
     constructor(application: Application) : super(application) {
         bleClient.usedEnergy.subscribe {
@@ -77,6 +80,14 @@ class HomeViewModel : AndroidViewModel {
         bleClient.gpsSatelliteCount.subscribe {
             gpsSatelliteCount.postValue(it.toInt())
         }
+
+        bleClient.altitude.subscribe{
+            altitude.postValue(it)
+        }
+
+        bleClient.ridingTime.subscribe {
+            ridingTime.postValue(it)
+        }
     }
 
     fun setState(value: Esk8palState) {
@@ -86,13 +97,5 @@ class HomeViewModel : AndroidViewModel {
         }, {
             Log.e(TAG, it.message)
         })
-    }
-
-    private fun processData(data: ByteArray) : Double {
-        return ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).double
-    }
-
-    override fun onCleared() {
-        super.onCleared()
     }
 }

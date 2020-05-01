@@ -116,6 +116,13 @@ class HomeFragment : Fragment() {
             } ?: ""
         })
 
+        homeViewModel.altitude.observe(viewLifecycleOwner, Observer {
+            altitude.text = it?.let {
+                "%.2f m".format((it))
+            } ?: ""
+        })
+
+
         homeViewModel.tripDistance.observe(viewLifecycleOwner, Observer {
             trip_distance.text = it?.let {
                 "%.2f km".format((it))
@@ -132,6 +139,14 @@ class HomeFragment : Fragment() {
                 "%d".format((it))
             } ?: ""
         })
+
+        homeViewModel.ridingTime.observe(viewLifecycleOwner, Observer {
+            ride_time.text = it?.let {
+                "%d s".format((it))
+            } ?: ""
+        })
+
+
         return root
     }
 }
