@@ -7,7 +7,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.wiklosoft.esk8logger"
+        applicationId "com.wiklosoft.esk8pal"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
