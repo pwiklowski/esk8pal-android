@@ -30,7 +30,7 @@ class MainActivity() : AppCompatActivity() {
 
         (application as App).bleClient.connectionState.subscribe {
             Log.d("LoadingFragment", "connection status  ${it.toString()}")
-            if (it != RxBleConnection.RxBleConnectionState.CONNECTED) {
+            if (it == ConnectionState.DISCONNECTED) {
                 val intent = Intent(this, OnBoardingActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)

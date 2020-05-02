@@ -5,9 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.polidea.rxandroidble2.RxBleConnection
 import com.wiklosoft.esk8logger.App
+import com.wiklosoft.esk8logger.ConnectionState
 
 class LoadingViewModel : AndroidViewModel {
-    val connectionState = MutableLiveData<RxBleConnection.RxBleConnectionState>()
+    val connectionState = MutableLiveData<ConnectionState>()
 
     constructor(application: Application) : super(application) {
         val client = getApplication<App>().bleClient
@@ -15,6 +16,5 @@ class LoadingViewModel : AndroidViewModel {
         client.connectionState.subscribe {
             connectionState.postValue(it)
         }
-        connectionState.postValue(client.getDevice().connectionState)
     }
 }

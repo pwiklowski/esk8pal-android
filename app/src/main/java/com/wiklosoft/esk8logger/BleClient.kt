@@ -53,13 +53,30 @@ enum class Esk8palState(val value: Byte){
     }
 };
 
+enum class ConnectionState {
+    CONNECTING("CONNECTING"),
+    CONNECTED("CONNECTED"),
+    INITIALIZED("INITIALIZED"),
+    DISCONNECTED("DISCONNECTED"),
+    DISCONNECTING( "DISCONNECTING");
+
+    private var description: String? = null
+
+    constructor(description: String?) {
+        this.description = description
+    }
+
+    override fun toString(): String {
+        return "RxBleConnectionState{$description}"
+    }
+}
 
 class BleClient {
     private var bleClient: RxBleClient
     lateinit var connectionSub: Disposable
     private var connection: RxBleConnection? = null
 
-    var connectionState = BehaviorSubject.create<RxBleConnection.RxBleConnectionState>()
+    var connectionState = BehaviorSubject.create<ConnectionState>()
 
     var voltage = BehaviorSubject.create<Double>()
     var current = BehaviorSubject.create<Double>()
@@ -82,15 +99,28 @@ class BleClient {
 
     constructor(context: Context) {
         bleClient = RxBleClient.create(context)
-        getDevice().observeConnectionStateChanges().subscribe {
-            connectionState.onNext(it)
+
+        handleConnectionState(getDevice().connectionState)
+        getDevice().observeConnectionStateChanges().subscribe({
+            handleConnectionState(it)
             if (it == RxBleConnection.RxBleConnectionState.DISCONNECTED) {
                 connect()
             }
-        }
+        }, {
+            Log.e(TAG, it.toString());
+        })
 
         if (getDevice().connectionState == RxBleConnection.RxBleConnectionState.DISCONNECTED) {
             connect()
+        }
+    }
+
+    private fun handleConnectionState(state: RxBleConnection.RxBleConnectionState) {
+        when (state) {
+            RxBleConnection.RxBleConnectionState.CONNECTED -> connectionState.onNext(ConnectionState.CONNECTED)
+            RxBleConnection.RxBleConnectionState.DISCONNECTED-> connectionState.onNext(ConnectionState.DISCONNECTED)
+            RxBleConnection.RxBleConnectionState.DISCONNECTING-> connectionState.onNext(ConnectionState.DISCONNECTING)
+            RxBleConnection.RxBleConnectionState.CONNECTING-> connectionState.onNext(ConnectionState.CONNECTING)
         }
     }
 
@@ -199,7 +229,7 @@ class BleClient {
 
     private fun observeAppState() {
         connection?.setupNotification(UUID.fromString(CHAR_APP_STATE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
-            observable.subscribe { data ->
+            observable.subscribe({ data ->
                 Log.d(TAG, "size" + data.size);
 
                 current.onNext(processData(data.copyOfRange(0, 8)))
@@ -225,7 +255,12 @@ class BleClient {
                 //freeStorage: uint32_t
                 //totalStorage: uint32_t
 
-            }
+                if (connectionState.value != ConnectionState.INITIALIZED){
+                    connectionState.onNext(ConnectionState.INITIALIZED)
+                }
+            }, {
+                Log.e(TAG, it.message);
+            })
         }, {
             Log.e(TAG, it.message);
         })
