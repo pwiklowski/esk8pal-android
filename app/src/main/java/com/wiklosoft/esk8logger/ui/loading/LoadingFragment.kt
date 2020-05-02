@@ -3,17 +3,23 @@ package com.wiklosoft.esk8logger.ui.loading
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.polidea.rxandroidble2.RxBleConnection
 import com.wiklosoft.esk8logger.MainActivity
 import com.wiklosoft.esk8logger.R
+import kotlinx.android.synthetic.main.loading_fragment.*
+import kotlinx.android.synthetic.main.loading_fragment.view.*
 
 
 class LoadingFragment : Fragment() {
@@ -38,6 +44,8 @@ class LoadingFragment : Fragment() {
                 openMainActivity()
             }
         })
+
+        (root.loading_animation.background as AnimationDrawable).start()
 
         return root
     }
