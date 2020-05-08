@@ -11,9 +11,11 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.polidea.rxandroidble2.RxBleConnection
+import io.reactivex.disposables.Disposable
 
 
 class MainActivity() : AppCompatActivity() {
+    private lateinit var connectionSub: Disposable;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +30,7 @@ class MainActivity() : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        (application as App).bleClient.connectionState.subscribe {
+        connectionSub = (application as App).bleClient.connectionState.subscribe {
             Log.d("LoadingFragment", "connection status  ${it.toString()}")
             if (it == ConnectionState.DISCONNECTED) {
                 val intent = Intent(this, OnBoardingActivity::class.java)
@@ -36,5 +38,17 @@ class MainActivity() : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+    }
+
+
+    override fun onPause() {
+        connectionSub.dispose()
+
+        with((application as App).bleClient) {
+            if (state.value == Esk8palState.PARKED) {
+                disconnect()
+            }
+        }
+        super.onPause()
     }
 }
