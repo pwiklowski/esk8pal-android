@@ -230,8 +230,6 @@ class BleClient {
     private fun observeAppState() {
         connection?.setupNotification(UUID.fromString(CHAR_APP_STATE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
             observable.subscribe({ data ->
-                Log.d(TAG, "size" + data.size);
-
                 current.onNext(processData(data.copyOfRange(0, 8)))
                 voltage.onNext(processData(data.copyOfRange(8, 16)))
                 usedEnergy.onNext(processData(data.copyOfRange(16, 24)))
@@ -250,7 +248,9 @@ class BleClient {
                 gpsFixStatus.onNext(data[76])
                 gpsSatelliteCount.onNext(data[77])
 
-                state.onNext(Esk8palState.of(data[78]))
+                if(state.value != Esk8palState.of(data[78])){
+                    state.onNext(Esk8palState.of(data[78]))
+                }
 
                 //freeStorage: uint32_t
                 //totalStorage: uint32_t

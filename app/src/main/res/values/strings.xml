@@ -18,4 +18,5 @@
     <string name="wifi_ssid">Wifi SSID</string>
 
     <string name="storage">Storage</string>
+    <string name="channel_name">Ride details</string>
 </resources>
