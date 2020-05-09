@@ -14,5 +14,15 @@ class OnBoardingActivity : AppCompatActivity() {
                 .replace(R.id.container, LoadingFragment.newInstance())
                 .commitNow()
         }
+
+    }
+
+    override fun onResume() {
+        with((application as App).bleClient) {
+            if (connectionState.value == ConnectionState.DISCONNECTED){
+                connect()
+            }
+        }
+        super.onResume()
     }
 }

@@ -103,16 +103,9 @@ class BleClient {
         handleConnectionState(getDevice().connectionState)
         getDevice().observeConnectionStateChanges().subscribe({
             handleConnectionState(it)
-            if (it == RxBleConnection.RxBleConnectionState.DISCONNECTED) {
-                connect()
-            }
         }, {
             Log.e(TAG, it.toString());
         })
-
-        if (getDevice().connectionState == RxBleConnection.RxBleConnectionState.DISCONNECTED) {
-            connect()
-        }
     }
 
     private fun handleConnectionState(state: RxBleConnection.RxBleConnectionState) {
@@ -128,7 +121,7 @@ class BleClient {
         return "30:AE:A4:4C:D2:52"
     }
 
-    private fun connect() {
+    fun connect() {
         connectionSub = bleClient.getBleDevice(getDeviceMac()).establishConnection(true).subscribe({
             Log.d(TAG, "connected");
             connection = it
@@ -166,6 +159,7 @@ class BleClient {
 
     fun disconnect() {
         connectionSub.dispose()
+        connection = null
     }
 
     fun getDevice(): RxBleDevice {
