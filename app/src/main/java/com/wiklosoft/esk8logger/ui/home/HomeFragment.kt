@@ -8,10 +8,14 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.preference.PreferenceManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.wiklosoft.esk8logger.Esk8palState
 import com.wiklosoft.esk8logger.R
 import kotlinx.android.synthetic.main.fragment_home.*
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
 
 
 class HomeFragment : Fragment() {
@@ -146,7 +150,29 @@ class HomeFragment : Fragment() {
             } ?: ""
         })
 
+        Configuration.getInstance().load(activity, PreferenceManager.getDefaultSharedPreferences(activity));
+
 
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        map.onResume()
+        map.setMultiTouchControls(true)
+        map.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+
+        with(map.controller) {
+            setZoom(15.0)
+            val startPoint = GeoPoint(50.079623, 19.999338)
+            setCenter(startPoint)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        map.onPause()
     }
 }
