@@ -122,7 +122,7 @@ class BleClient {
     }
 
     fun connect() {
-        connectionSub = bleClient.getBleDevice(getDeviceMac()).establishConnection(true).subscribe({
+        connectionSub = bleClient.getBleDevice(getDeviceMac()).establishConnection(false).subscribe({
             Log.d(TAG, "connected");
             connection = it
             connection?.requestMtu(500)?.subscribe()
