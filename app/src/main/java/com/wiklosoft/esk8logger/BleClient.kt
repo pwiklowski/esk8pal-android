@@ -74,6 +74,7 @@ enum class ConnectionState {
 class BleClient {
     private var bleClient: RxBleClient
     lateinit var connectionSub: Disposable
+    private var appStateSub: Disposable? = null
     private var connection: RxBleConnection? = null
 
     var connectionState = BehaviorSubject.create<ConnectionState>()
@@ -159,6 +160,7 @@ class BleClient {
 
     fun disconnect() {
         connectionSub.dispose()
+        appStateSub?.dispose()
         connection = null
     }
 
@@ -222,41 +224,41 @@ class BleClient {
     }
 
     private fun observeAppState() {
-        connection?.setupNotification(UUID.fromString(CHAR_APP_STATE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
-            observable.subscribe({ data ->
-                current.onNext(processData(data.copyOfRange(0, 8)))
-                voltage.onNext(processData(data.copyOfRange(8, 16)))
-                usedEnergy.onNext(processData(data.copyOfRange(16, 24)))
-                totalEnergy.onNext(processData(data.copyOfRange(24, 32)))
+        appStateSub = connection?.setupNotification(UUID.fromString(CHAR_APP_STATE), NotificationSetupMode.QUICK_SETUP)?.subscribe({ observable ->
+                observable.subscribe({ data ->
+                    current.onNext(processData(data.copyOfRange(0, 8)))
+                    voltage.onNext(processData(data.copyOfRange(8, 16)))
+                    usedEnergy.onNext(processData(data.copyOfRange(16, 24)))
+                    totalEnergy.onNext(processData(data.copyOfRange(24, 32)))
 
-                speed.onNext(processData(data.copyOfRange(32, 40)))
-                latitude.onNext(processData(data.copyOfRange(40, 48)))
-                longitude.onNext(processData(data.copyOfRange(48, 56)))
+                    speed.onNext(processData(data.copyOfRange(32, 40)))
+                    latitude.onNext(processData(data.copyOfRange(40, 48)))
+                    longitude.onNext(processData(data.copyOfRange(48, 56)))
 
-                tripDistance.onNext(processData(data.copyOfRange(56, 64)))
+                    tripDistance.onNext(processData(data.copyOfRange(56, 64)))
 
-                altitude.onNext(processData(data.copyOfRange(64, 72)))
+                    altitude.onNext(processData(data.copyOfRange(64, 72)))
 
-                ridingTime.onNext(ByteBuffer.wrap(data.copyOfRange(72, 76)).order(ByteOrder.LITTLE_ENDIAN).int)
+                    ridingTime.onNext(ByteBuffer.wrap(data.copyOfRange(72, 76)).order(ByteOrder.LITTLE_ENDIAN).int)
 
-                gpsFixStatus.onNext(data[76])
-                gpsSatelliteCount.onNext(data[77])
+                    gpsFixStatus.onNext(data[76])
+                    gpsSatelliteCount.onNext(data[77])
 
-                if(state.value != Esk8palState.of(data[78])){
-                    state.onNext(Esk8palState.of(data[78]))
-                }
+                    if(state.value != Esk8palState.of(data[78])){
+                        state.onNext(Esk8palState.of(data[78]))
+                    }
 
-                //freeStorage: uint32_t
-                //totalStorage: uint32_t
+                    //freeStorage: uint32_t
+                    //totalStorage: uint32_t
 
-                if (connectionState.value != ConnectionState.INITIALIZED){
-                    connectionState.onNext(ConnectionState.INITIALIZED)
-                }
+                    if (connectionState.value != ConnectionState.INITIALIZED){
+                        connectionState.onNext(ConnectionState.INITIALIZED)
+                    }
+                }, {
+                    Log.e(TAG, it.message);
+                })
             }, {
                 Log.e(TAG, it.message);
             })
-        }, {
-            Log.e(TAG, it.message);
-        })
     }
 }
