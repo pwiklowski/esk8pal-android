@@ -31,19 +31,19 @@ class LoadingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val root = inflater.inflate(R.layout.loading_fragment, container, false)
-
         viewModel = ViewModelProviders.of(this).get(LoadingViewModel::class.java)
+        (root.loading_animation.background as AnimationDrawable).start()
+        return root
+    }
 
+    override fun onResume() {
+        super.onResume()
         viewModel.connectionState.observe(viewLifecycleOwner, Observer {
             Log.d("LoadingFragment", "connection status ${it.toString()}")
             if (it == ConnectionState.INITIALIZED) {
                 openMainActivity()
             }
         })
-
-        (root.loading_animation.background as AnimationDrawable).start()
-
-        return root
     }
 
     fun openMainActivity() {
