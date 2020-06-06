@@ -159,6 +159,7 @@ class BleClient {
     }
 
     fun disconnect() {
+        connectionState.onNext(ConnectionState.DISCONNECTED)
         connectionSub.dispose()
         appStateSub?.dispose()
         connection = null
