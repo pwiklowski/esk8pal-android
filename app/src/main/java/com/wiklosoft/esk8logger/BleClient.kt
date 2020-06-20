@@ -45,7 +45,8 @@ private const val CHAR_TIME = "0000fd08-0000-1000-8000-00805f9b34fb"
 
 enum class Esk8palState(val value: Byte){
     PARKED(0),
-    RIDING(1);
+    RIDING(1),
+    CHARGING(2);
 
     companion object {
         fun of(value: Byte) = values().find { it.value == value}
