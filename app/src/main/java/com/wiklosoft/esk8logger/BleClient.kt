@@ -1,17 +1,19 @@
 package com.wiklosoft.esk8logger
 
 import android.content.Context
+import android.os.Handler
 import android.util.Log
-import com.polidea.rxandroidble2.NotificationSetupMode
-import com.polidea.rxandroidble2.RxBleClient
-import com.polidea.rxandroidble2.RxBleConnection
-import com.polidea.rxandroidble2.RxBleDevice
+import com.polidea.rxandroidble2.*
+
+import com.polidea.rxandroidble2.scan.ScanFilter
+import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 private const val TAG = "BleClient"
 
@@ -77,6 +79,7 @@ class BleClient {
     lateinit var connectionSub: Disposable
     private var appStateSub: Disposable? = null
     private var connection: RxBleConnection? = null
+    private var scanSubscription: Disposable? = null
 
     var connectionState = BehaviorSubject.create<ConnectionState>()
 
@@ -124,14 +127,36 @@ class BleClient {
     }
 
     fun connect() {
-        connectionSub = bleClient.getBleDevice(getDeviceMac()).establishConnection(false).subscribe({
-            Log.d(TAG, "connected");
+        Log.d(TAG, "connect");
+        scanSubscription = bleClient.scanBleDevices(
+            ScanSettings.Builder()
+                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                .build(),
+            ScanFilter.Builder().setDeviceAddress(getDeviceMac()).build()
+        ).subscribe(
+            {
+                Log.d(TAG, "result ${it.bleDevice.macAddress}");
+                scanSubscription?.dispose()
+                Handler().postDelayed({
+                    connectToDevice()
+                },500)
+            },
+            {
+                // Handle an error here.
+                Log.d(TAG, "error $it");
+            }
+        )
+    }
+
+    private fun connectToDevice(){
+        connectionSub = bleClient.getBleDevice(getDeviceMac()).establishConnection(false, Timeout(15, TimeUnit.SECONDS)).subscribe({
+            Log.d(TAG, "connected $it");
             connection = it
             connection?.requestMtu(500)?.subscribe()
             onConnected()
         }, {
             connection = null
-            Log.e(TAG, it.toString());
+            Log.e(TAG, "connect $it");
         })
     }
 
