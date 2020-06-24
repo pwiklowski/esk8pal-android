@@ -8,219 +8,237 @@
 
     <org.osmdroid.views.MapView android:id="@+id/map"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent" >
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
+    </org.osmdroid.views.MapView>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="450dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:background="#FFFFFF"
-        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Latitude" />
+            android:background="#FFFFFF"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/latitude"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
+
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Latitude" />
+
+            <TextView
+                android:id="@+id/latitude"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="50.12345" />
+
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Longitude" />
+
+            <TextView
+                android:id="@+id/longitude"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="20.34514" />
+
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Speed" />
+
+            <TextView
+                android:id="@+id/speed"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="20 km/h" />
+
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Trip distance" />
+
+            <TextView
+                android:id="@+id/trip_distance"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="12 km" />
+
+
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="GPS Fix Status" />
+
+            <TextView
+                android:id="@+id/gps_fix_status"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0" />
+
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="GPS Satellite count" />
+
+            <TextView
+                android:id="@+id/gps_satellite_count"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0" />
+
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Altitude" />
+
+            <TextView
+                android:id="@+id/altitude"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="50.12345" />
+            android:background="#FFFFFF"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Longitude" />
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="State" />
 
-        <TextView
-            android:id="@+id/longitude"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="20.34514" />
+            <TextView
+                android:id="@+id/state"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Riding" />
 
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Speed" />
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Connection status" />
 
-        <TextView
-            android:id="@+id/speed"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="20 km/h" />
+            <TextView
+                android:id="@+id/connection_status"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CONNECTED" />
 
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Trip distance" />
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="Voltage" />
 
-        <TextView
-            android:id="@+id/trip_distance"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="12 km" />
+            <TextView
+                android:id="@+id/voltage"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="26 V" />
 
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Current" />
 
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="GPS Fix Status" />
+            <TextView
+                android:id="@+id/current"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="10 A" />
 
-        <TextView
-            android:id="@+id/gps_fix_status"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="0" />
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Used energy" />
 
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="GPS Satellite count" />
+            <TextView
+                android:id="@+id/used_energy"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2345 mAh" />
 
-        <TextView
-            android:id="@+id/gps_satellite_count"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="0" />
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Total energy" />
 
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Altitude" />
+            <TextView
+                android:id="@+id/total_enegry"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="9000 mAh" />
 
-        <TextView
-            android:id="@+id/altitude"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="0" />
+            <TextView
+                style="@style/LabelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Trip time" />
 
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="State" />
-
-        <TextView
-            android:id="@+id/state"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Riding" />
-
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Connection status" />
-
-        <TextView
-            android:id="@+id/connection_status"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="CONNECTED" />
-
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:text="Voltage" />
-
-        <TextView
-            android:id="@+id/voltage"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="26 V" />
-
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Current" />
-
-        <TextView
-            android:id="@+id/current"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="10 A" />
-
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Used energy" />
-
-        <TextView
-            android:id="@+id/used_energy"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="2345 mAh" />
-
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Total energy" />
-
-        <TextView
-            android:id="@+id/total_enegry"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="9000 mAh" />
-
-        <TextView
-            style="@style/LabelText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Trip time" />
-
-        <TextView
-            android:id="@+id/ride_time"
-            style="@style/ValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="9000 mAh" />
+            <TextView
+                android:id="@+id/ride_time"
+                style="@style/ValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="9000 mAh" />
 
 
-    </LinearLayout>
+        </LinearLayout>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/state_toggle"
