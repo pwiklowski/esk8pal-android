@@ -123,7 +123,7 @@ class BleClient {
     }
 
     private fun getDeviceMac(): String { //TODO store it somewhere, add activity when scan options
-        return "30:AE:A4:4C:D2:52"
+        return "24:0A:C4:C5:92:2A"
     }
 
     fun connect() {
