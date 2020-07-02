@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.wiklosoft.esk8logger.ConnectionState
 import com.wiklosoft.esk8logger.MainActivity
 import com.wiklosoft.esk8logger.R
+import kotlinx.android.synthetic.main.loading_fragment.*
 import kotlinx.android.synthetic.main.loading_fragment.view.*
 
 
@@ -43,6 +44,22 @@ class LoadingFragment : Fragment() {
             if (it == ConnectionState.INITIALIZED) {
                 openMainActivity()
             }
+        })
+
+        viewModel.voltage.observe(viewLifecycleOwner, Observer {
+            voltage.text =  it?.let {
+                "Voltage: %.2f V".format((it))
+            } ?: ""
+        })
+
+        viewModel.current.observe(viewLifecycleOwner, Observer {
+            current.text =  it?.let {
+                "Current: %.2f A".format((it))
+            } ?: ""
+        })
+
+        viewModel.state.observe(viewLifecycleOwner, Observer {
+            state.text = it.toString()
         })
     }
 

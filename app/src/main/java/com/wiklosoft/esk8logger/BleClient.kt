@@ -1,10 +1,11 @@
 package com.wiklosoft.esk8logger
 
 import android.content.Context
-import android.os.Handler
 import android.util.Log
-import com.polidea.rxandroidble2.*
-
+import com.polidea.rxandroidble2.NotificationSetupMode
+import com.polidea.rxandroidble2.RxBleClient
+import com.polidea.rxandroidble2.RxBleConnection
+import com.polidea.rxandroidble2.RxBleDevice
 import com.polidea.rxandroidble2.scan.ScanFilter
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.Single
@@ -13,7 +14,6 @@ import io.reactivex.subjects.BehaviorSubject
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 private const val TAG = "BleClient"
 
@@ -83,6 +83,10 @@ class BleClient {
 
     var connectionState = BehaviorSubject.create<ConnectionState>()
 
+    var advVoltage = BehaviorSubject.create<Float>()
+    var advCurrent = BehaviorSubject.create<Float>()
+    var advState = BehaviorSubject.create<Esk8palState>()
+
     var voltage = BehaviorSubject.create<Double>()
     var current = BehaviorSubject.create<Double>()
     val usedEnergy = BehaviorSubject.create<Double>()
@@ -135,11 +139,18 @@ class BleClient {
             ScanFilter.Builder().setDeviceAddress(getDeviceMac()).build()
         ).subscribe(
             {
-                Log.d(TAG, "result ${it.bleDevice.macAddress}");
-                scanSubscription?.dispose()
-                Handler().postDelayed({
-                    connectToDevice()
-                },500)
+
+                var data = it.scanRecord.getManufacturerSpecificData(0x0000)
+                var voltage = ByteBuffer.wrap(data?.copyOfRange(0,4)).order(ByteOrder.LITTLE_ENDIAN).float
+                var current = ByteBuffer.wrap(data?.copyOfRange(4,8)).order(ByteOrder.LITTLE_ENDIAN).float
+                var state = Esk8palState.of(data!![8])
+
+                Log.d(TAG, "result ${it.bleDevice.macAddress} ${voltage} ${current}");
+
+                advVoltage.onNext(voltage)
+                advCurrent.onNext(current)
+                advState.onNext(state)
+
             },
             {
                 // Handle an error here.
