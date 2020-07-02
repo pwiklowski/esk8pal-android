@@ -61,6 +61,10 @@ class LoadingFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner, Observer {
             state.text = it.toString()
         })
+
+        connect_button.setOnClickListener {
+            viewModel.connect()
+        }
     }
 
     fun openMainActivity() {

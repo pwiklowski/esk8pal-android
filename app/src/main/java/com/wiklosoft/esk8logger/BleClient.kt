@@ -115,6 +115,8 @@ class BleClient {
         }, {
             Log.e(TAG, it.toString());
         })
+
+        scan()
     }
 
     private fun handleConnectionState(state: RxBleConnection.RxBleConnectionState) {
@@ -130,13 +132,16 @@ class BleClient {
         return "24:0A:C4:C5:92:2A"
     }
 
-    fun connect() {
-        Log.d(TAG, "connect");
+    fun scan() {
+        Log.d(TAG, "scan");
         scanSubscription = bleClient.scanBleDevices(
             ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
                 .build(),
-            ScanFilter.Builder().setDeviceAddress(getDeviceMac()).build()
+            ScanFilter.Builder().
+                setDeviceAddress(getDeviceMac()).
+                //setServiceUuid(ParcelUuid.fromString("000000ff-0000-1000-8000-00805f9b34fb")).
+                build()
         ).subscribe(
             {
 
@@ -159,7 +164,7 @@ class BleClient {
         )
     }
 
-    private fun connectToDevice(){
+    fun connect(){
         connectionSub = bleClient.getBleDevice(getDeviceMac()).establishConnection(true).subscribe({
             Log.d(TAG, "connected $it");
             connection = it

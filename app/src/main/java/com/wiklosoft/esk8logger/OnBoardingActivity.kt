@@ -24,13 +24,4 @@ class OnBoardingActivity : AppCompatActivity() {
             startActivityForResult(enableBtIntent, 1)
         }
     }
-
-    override fun onResume() {
-        with((application as App).bleClient) {
-            if (connectionState.value == ConnectionState.DISCONNECTED){
-                connect()
-            }
-        }
-        super.onResume()
-    }
 }
