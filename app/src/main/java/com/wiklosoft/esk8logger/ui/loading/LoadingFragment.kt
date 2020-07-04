@@ -3,12 +3,15 @@ package com.wiklosoft.esk8logger.ui.loading
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.content.pm.PackageManager
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -64,6 +67,11 @@ class LoadingFragment : Fragment() {
 
         connect_button.setOnClickListener {
             viewModel.connect()
+        }
+
+        if ( ContextCompat.checkSelfPermission(context!!, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+
+            ActivityCompat.requestPermissions(activity!!, Array<String>(1) {android.Manifest.permission.ACCESS_FINE_LOCATION }, 1);
         }
     }
 
