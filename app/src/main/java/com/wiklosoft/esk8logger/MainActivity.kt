@@ -49,10 +49,8 @@ class MainActivity() : AppCompatActivity() {
         connectionSub.dispose()
 
         with((application as App).bleClient) {
-            if (state.value == Esk8palState.PARKED) {
-                disconnect()
-                goToLoadingScreen()
-            }
+            disconnect()
+            goToLoadingScreen()
         }
         super.onPause()
     }
